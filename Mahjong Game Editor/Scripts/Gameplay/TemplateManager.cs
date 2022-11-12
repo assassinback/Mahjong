@@ -49,6 +49,16 @@ namespace MahjongTemplateEditor
         private GameObject layer2selected;
 
         /// <summary>
+        /// GameObject of the tile number 3 that was selected
+        /// </summary>
+        private GameObject layer3selected;
+
+        /// <summary>
+        /// GameObject of the tile number 4 that was selected
+        /// </summary>
+        private GameObject layer4selected;
+
+        /// <summary>
         /// Current template
         /// </summary>
         internal Template currentTemplate;
@@ -190,14 +200,36 @@ namespace MahjongTemplateEditor
                 /// Sets the position for TilePointer
                 TilePointer.Instance.SetTargetPos(layer1selected.transform);
             }
-            else
+            else if(layer2selected==null)
             {
                 /// Assigns second tile 
                 layer2selected = value;
 
+                /// Sets the position for TilePointer
+                //TilePointer.Instance.SetTargetPos(layer2selected.transform);
                 /// Check if two selected tiles are equal
                 Check();
             }
+            //else if (layer3selected == null)
+            //{
+            //    /// Assigns second tile 
+            //    layer3selected = value;
+
+            //    /// Sets the position for TilePointer
+            //    //TilePointer.Instance.SetTargetPos(layer3selected.transform);
+            //    /// Check if two selected tiles are equal
+            //    //Check();
+            //}
+            //else if (layer4selected == null)
+            //{
+            //    /// Assigns second tile 
+            //    layer4selected = value;
+
+            //    /// Sets the position for TilePointer
+            //    //TilePointer.Instance.SetTargetPos(layer2selected.transform);
+            //    /// Check if two selected tiles are equal
+            //    Check();
+            //}
         }
 
         /// <summary>
@@ -208,6 +240,16 @@ namespace MahjongTemplateEditor
             ///
             layer1selected = null;
         }
+        //internal void ResetLayer2()
+        //{
+        //    ///
+        //    layer2selected = null;
+        //}
+        //internal void ResetLayer3()
+        //{
+        //    ///
+        //    layer3selected = null;
+        //}
 
         /// <summary>
         /// Check if two selected tiles are equal and performs knock
@@ -220,6 +262,12 @@ namespace MahjongTemplateEditor
             /// Assigns id of the tile 2
             string id2 = layer2selected.GetComponent<TileLayer>().GetID();
 
+            ///// Assigns id of the tile 3
+            //string id3 = layer3selected.GetComponent<TileLayer>().GetID();
+
+            ///// Assigns id of the tile 4
+            //string id4 = layer4selected.GetComponent<TileLayer>().GetID();
+
             /// Check if two ids are equal
             if (id1 == id2)
             {
@@ -228,6 +276,12 @@ namespace MahjongTemplateEditor
 
                 /// Hide tile 2
                 layer2selected.GetComponent<TileLayer>().Hide();
+
+                ///// Hide tile 2
+                //layer3selected.GetComponent<TileLayer>().Hide();
+
+                ///// Hide tile 2
+                //layer4selected.GetComponent<TileLayer>().Hide();
 
                 /// Creates and Assigns Knock Manager script
                 KnockManager knockManager = gameObject.AddComponent<KnockManager>();
@@ -247,11 +301,23 @@ namespace MahjongTemplateEditor
                 /// Removes tile from the list
                 RemoveFromList(layer2selected.GetComponent<TileLayer>().layerMatrixName);
 
+                ///// Removes tile from the list
+                //RemoveFromList(layer3selected.GetComponent<TileLayer>().layerMatrixName);
+
+                ///// Removes tile from the list
+                //RemoveFromList(layer4selected.GetComponent<TileLayer>().layerMatrixName);
+
                 /// Reset tile 1 gameobject
                 layer1selected = null;
 
                 /// Reset tile 2 gameobject
                 layer2selected = null;
+
+                ///// Reset tile 2 gameobject
+                //layer3selected = null;
+
+                ///// Reset tile 2 gameobject
+                //layer4selected = null;
 
                 /// Reset pointer 
                 TilePointer.Instance.ResetPointer();
@@ -539,12 +605,24 @@ namespace MahjongTemplateEditor
                     /// Assigns id of the tile 2
                     string id2 = splitArray[1];
 
+                    ///// Assigns id of the tile 2
+                    //string id3 = splitArray[2];
+
+                    ///// Assigns id of the tile 2
+                    //string id4 = splitArray[3];
+
+
                     /// Adds tile 1 id to the list
                     sequence.Add(id1);
 
                     /// Adds tile 2 id to the list
                     sequence.Add(id2);
 
+                    ///// Adds tile 2 id to the list
+                    //sequence.Add(id3);
+
+                    ///// Adds tile 2 id to the list
+                    //sequence.Add(id4);
                     /// Check click allowed
                     CheckClickAllow();
                 }
@@ -583,7 +661,7 @@ namespace MahjongTemplateEditor
                     idToSet = tileIDs[idNumber];
 
                     /// Increase counter of id by 2
-                    counterOfID = 2;
+                    counterOfID = 4;
 
                     /// Remove number of ids list
                     tileIDs.RemoveAt(idNumber);
@@ -622,7 +700,7 @@ namespace MahjongTemplateEditor
                         int idNumber = Random.Range(0, tileIDs.Count - 1);
 
                         /// Set the counter of id to 2 
-                        counterOfID = 2;
+                        counterOfID = 4;
 
                         /// Remove number from  tile id list
                         tileIDs.RemoveAt(idNumber);

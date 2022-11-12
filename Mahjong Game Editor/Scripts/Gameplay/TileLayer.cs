@@ -228,6 +228,9 @@ namespace MahjongTemplateEditor
                 {
                     /// Resets first layer that was selected
                     TemplateManager.Instance.ResetLayer1();
+                    //TemplateManager.Instance.ResetLayer2();
+                    //TemplateManager.Instance.ResetLayer3();
+                    //TemplateManager.Instance.ResetLayer1();
 
                     /// Resets this layer
                     ResetTile();
