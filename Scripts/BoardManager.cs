@@ -17,13 +17,17 @@ public class BoardManager : MonoBehaviour
     }
     private void Start()
     {
+        //StartGenerating();
 
+
+    }
+    public void StartGenerating()
+    {
         table = new Table(layers, columns, rows);
 
         GenerateBoard();
 
     }
-
     public void GenerateBoard()
     {
         if (Mathf.Pow( columns*rows,layers)%4 != 0)
@@ -34,59 +38,38 @@ public class BoardManager : MonoBehaviour
         GameObject Cube = Resources.Load<GameObject>("Tile");
         //Material mat = white;
         Transform parrent = transform.GetChild(0);
-        Vector3 firstTrans = new Vector3(-337,500,0);
+        Vector3 firstTrans = new Vector3(-337,300,0);
         //  Setting Tiles
-
         for (int k = 0; k < table.layers.Length; k++)
         {
-            
-
             for (int i = 0; i < table.layers[k].columns.Length; i++)
             {
-                print($"{table.layers[k].columns[i].rows.Length}");
+                //print($"{table.layers[k].columns[i].rows.Length}");
 
                 for (int j = 0; j < table.layers[k].columns[i].rows.Length; j++)
                 {
-                    print("damm");
-
-                    //if (mat == white)
-                    //{
-                    //    mat = black;
-                    //}
-                    //else
-                    //{
-                    //    mat = white;
-                    //}
                     GameObject tile = Instantiate(Cube, transform.position, Quaternion.identity);
                     table.layers[k].columns[i].rows[j].tile = tile;
                     //grid.y[i].x[j] = tile;
-                    tile.transform.parent = parrent;
+                    tile.GetComponent<RectTransform>().sizeDelta = new Vector2(123,127);
+                    tile.transform.SetParent(parrent);
                     
                     //tile.GetComponent<MeshRenderer>().material = mat;
                     tile.transform.GetComponent<RectTransform>().anchoredPosition = firstTrans;
-                    firstTrans.x += 336;
+                    firstTrans.x += 130;
                     //firstTrans.y -= 309;
                     firstTrans.x += Cube.GetComponent<RectTransform>().localScale.x;
 
 
                     tile.gameObject.name = $"layer = {k} , col = {i} , row {j}";
                 }
-                //if (mat == white)
-                //{
-                //    mat = black;
-                //}
-                //else
-                //{
-                //    mat = white;
-                //}
                 firstTrans.x = parrent.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.x;
-                firstTrans.y -= 309;
+                firstTrans.y -= 145;
             }
             firstTrans.z -= Cube.transform.localScale.z;
             var tempZPos = firstTrans;
             firstTrans = parrent.GetChild(0).GetComponent<RectTransform>().anchoredPosition;
             firstTrans.z = tempZPos.z;
-            
         }
         GiveIds();
     }
@@ -117,20 +100,20 @@ public class BoardManager : MonoBehaviour
             {
 
                 int temp = UnityEngine.Random.Range(0, tiles.Count);
-                Debug.Log(tiles[temp]);
+                //Debug.Log(tiles[temp]);
                 tiles[temp].id = id;
                 tiles[temp].gameObject.name += $" ,id = {id}";
                 tiles[temp].SetImage(materials[materialToUse]);
                 
                 tiles.RemoveAt(temp);
-                Debug.Log(materialToUse);
+                //Debug.Log(materialToUse);
                 
                 index++;
                 if (index == 4)
                 {
                     id++;
                     index = 0;
-                    materials.Remove(materials[materialToUse]);
+                    //materials.Remove(materials[materialToUse]);
                     materialToUse = random();
                 }
             }

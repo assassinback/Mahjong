@@ -19,7 +19,7 @@ public class SelectTile : MonoBehaviour
     }
     private void selectTile()
     {
-        if(!TileManager._instance.selectTiles.Contains(this) && TileManager._instance.selectTiles.Count<10)
+        if(!TileManager._instance.selectTiles.Contains(this))
         {
             TileManager._instance.selectedCount++;
             TileManager._instance.selectTiles.Add(this);
