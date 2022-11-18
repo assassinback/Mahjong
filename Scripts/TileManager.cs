@@ -13,6 +13,7 @@ public class TileManager : MonoBehaviour
     public float originalTime;
     string levelFailText = "You Lose";
     string levelWinText = "You Win";
+    public List<int> ids;
     private void Awake()
     {
         _instance = this;
@@ -30,6 +31,13 @@ public class TileManager : MonoBehaviour
         cards.Clear();
         selectTiles.Clear();
         LoadTiles();
+        foreach(RectTransform rect in cards)
+        {
+            if(!ids.Contains(rect.GetComponent<Tile>().id))
+            {
+                ids.Add(rect.GetComponent<Tile>().id);
+            }
+        }
         originalTime = currentLevelInfo.levelTime;
         UIManager._instance.SetSliderMinMax(0, originalTime);
     }
@@ -125,4 +133,33 @@ public class TileManager : MonoBehaviour
             
         }
     }    
+    public void AddTime()
+    {
+        originalTime += (currentLevelInfo.levelTime / 7);
+        GameManager._instance.SetTime(GameManager._instance.GetTime()-1);
+    }
+    public void UndoMove()
+    {
+        selectTiles.RemoveAt(selectTiles.Count-1);
+        GameManager._instance.SetUndo(GameManager._instance.GetUndo() - 1);
+    }
+    public int random(int min,int max)
+    {
+        return UnityEngine.Random.Range(min, max);
+    }
+    public void GetHint()
+    {
+        int i = random(0, ids.Count);
+        for (int j=0;j<ids.Count;j++)
+        {
+            if(i==j)
+            {
+                for(int k=0;k<cards.Count;k++)
+                {
+
+                }
+            }
+        }
+        GameManager._instance.SetHints(GameManager._instance.GetHints() - 1);
+    }
 }
