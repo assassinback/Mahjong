@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager _instance;
     public int numberOfLevels;
     public string levelFileName;
+    public string levelPatternFileName;
     void Awake()
     {
         _instance = this;
@@ -43,4 +44,24 @@ public class GameManager : MonoBehaviour
     {
         return PlayerPrefs.GetInt("Undo");
     }
+    public void LevelComplete()
+    {
+        try
+        {
+            TileManager._instance.currentLevelInfo = LevelManager._instance.levelCount[int.Parse(TileManager._instance.currentLevelInfo.levelName)];
+            TileManager._instance.currentLevelPattern = LevelManager._instance.levelPattern[int.Parse(TileManager._instance.currentLevelInfo.levelName)-1];
+            BoardManager._instance.table = TileManager._instance.currentLevelPattern;
+            TileManager._instance.RetryLevel();
+        }
+        catch(System.Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+        
+    }
+    public void LevelFailed()
+    {
+        TileManager._instance.RetryLevel();
+    }
+
 }

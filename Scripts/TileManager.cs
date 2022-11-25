@@ -10,19 +10,32 @@ public class TileManager : MonoBehaviour
     public int selectedCount;
     public List<SelectTile> selectTiles;
     public LevelInfo currentLevelInfo;
+    public Table currentLevelPattern;
     public float originalTime;
     string levelFailText = "You Lose";
     string levelWinText = "You Win";
-    public List<int> ids;
+    //public List<int> ids;
+    public List<GameObject> topLayerTiles;
     private void Awake()
     {
         _instance = this;
     }
+    public void ClearCards()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
     public void RetryLevel()
     {
+        ClearCards();
+        cards.Clear();
+        selectTiles.Clear();
         BoardManager._instance.StartGenerating();
         LoadLevel();
         UIManager._instance.ResumeButtonClicked();
+        UIManager._instance.SetLevelNameText("Level " + currentLevelInfo.levelName);
     }
     public void LoadLevel()
     {
@@ -31,15 +44,9 @@ public class TileManager : MonoBehaviour
         cards.Clear();
         selectTiles.Clear();
         LoadTiles();
-        foreach(RectTransform rect in cards)
-        {
-            if(!ids.Contains(rect.GetComponent<Tile>().id))
-            {
-                ids.Add(rect.GetComponent<Tile>().id);
-            }
-        }
         originalTime = currentLevelInfo.levelTime;
         UIManager._instance.SetSliderMinMax(0, originalTime);
+        topLayerTiles = BoardManager._instance.GetTopLayerTiles();
     }
     public void LoadTiles()
     {
@@ -92,6 +99,8 @@ public class TileManager : MonoBehaviour
             UIManager._instance.ShowInGameUI();
             UIManager._instance.EnableLevelCompletePanel();
             UIManager._instance.SetCompleteLevelText(levelFailText);
+            UIManager._instance.nextLevelButton.onClick.RemoveAllListeners();
+            UIManager._instance.nextLevelButton.onClick.AddListener(GameManager._instance.LevelFailed);
             GameManager._instance.Pause();
         }
         else if (cards.Count <= 0)
@@ -128,20 +137,40 @@ public class TileManager : MonoBehaviour
                     currentLevelInfo.levelStars = 1;
             }
             UIManager._instance.ShowStars(tempStars);
+            UIManager._instance.nextLevelButton.onClick.RemoveAllListeners();
+            UIManager._instance.nextLevelButton.onClick.AddListener(GameManager._instance.LevelComplete);
             LevelManager._instance.SaveLevelInfo();
+            LevelManager._instance.GetPatterns();
+            LevelManager._instance.GetLevelInfo();
+            UIManager._instance.ShowLevelInfo();
             GameManager._instance.Pause();
             
         }
     }    
     public void AddTime()
     {
+        if (GameManager._instance.GetTime() <= 0)
+        {
+            return;
+        }
         originalTime += (currentLevelInfo.levelTime / 7);
+        if (originalTime > currentLevelInfo.levelTime)
+        {
+            originalTime = currentLevelInfo.levelTime;
+        }
         GameManager._instance.SetTime(GameManager._instance.GetTime()-1);
+        UIManager._instance.SetLimitedValues();
     }
     public void UndoMove()
     {
+        if (GameManager._instance.GetUndo() <= 0 || selectTiles.Count<=0)
+        {
+            return;
+        }
         selectTiles.RemoveAt(selectTiles.Count-1);
+        UIManager._instance.AddToStack();
         GameManager._instance.SetUndo(GameManager._instance.GetUndo() - 1);
+        UIManager._instance.SetLimitedValues();
     }
     public int random(int min,int max)
     {
@@ -149,17 +178,33 @@ public class TileManager : MonoBehaviour
     }
     public void GetHint()
     {
-        int i = random(0, ids.Count);
-        for (int j=0;j<ids.Count;j++)
+        if(GameManager._instance.GetHints()<=0)
         {
-            if(i==j)
+            return;
+        }
+        topLayerTiles = BoardManager._instance.GetTopLayerTiles();
+        int j = 0;
+        reselectid:
+        int id = topLayerTiles[j].GetComponent<Tile>().id;
+        if(!topLayerTiles[j].activeSelf)
+        {
+            j++;
+            goto reselectid;
+        }
+        for(int i=0;i<topLayerTiles.Count;i++)
+        {
+            if(topLayerTiles[i].GetComponent<Tile>().id==id)
             {
-                for(int k=0;k<cards.Count;k++)
-                {
+                topLayerTiles[i].gameObject.SetActive(false);
+                BoardManager._instance.RemoveEmptyRows();
+                
 
-                }
             }
         }
+        topLayerTiles = BoardManager._instance.GetTopLayerTiles();
+        UIManager._instance.AddToStack();
+        RefreshCards(id);
         GameManager._instance.SetHints(GameManager._instance.GetHints() - 1);
+        UIManager._instance.SetLimitedValues();
     }
 }

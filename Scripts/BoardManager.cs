@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +10,11 @@ public class BoardManager : MonoBehaviour
     public static BoardManager _instance;
 
     public List<Sprite> materials;
-    public int rows, columns, layers;
-    [field: SerializeField]public Table table;
+    public List<int> doneSprite;
+    /*    public Layer[] layer;
+    */
+    [field: SerializeField] public Table table;
+    public Color deselectColor;
     private void Awake()
     {
         _instance = this;
@@ -23,59 +27,86 @@ public class BoardManager : MonoBehaviour
     }
     public void StartGenerating()
     {
-        table = new Table(layers, columns, rows);
-
+        /*        table = new Table(table.layers);
+        */
+        doneSprite = new List<int>();
         GenerateBoard();
 
     }
     public void GenerateBoard()
     {
-        if (Mathf.Pow( columns*rows,layers)%4 != 0)
-        {
-            return;
-        }
+        //if (Mathf.Pow( columns*rows,layers)%4 != 0)
+        //{
+        //    return;
+        //}
         //Material black = Resources.Load<Material>("Black"), white = Resources.Load<Material>("White");
         GameObject Cube = Resources.Load<GameObject>("Tile");
+        
+        
+
         //Material mat = white;
         Transform parrent = transform.GetChild(0);
-        Vector3 firstTrans = new Vector3(-337,300,0);
         //  Setting Tiles
+        Vector3 firstTrans = new Vector3();
+        int i = 0;
         for (int k = 0; k < table.layers.Length; k++)
         {
-            for (int i = 0; i < table.layers[k].columns.Length; i++)
-            {
-                //print($"{table.layers[k].columns[i].rows.Length}");
+            firstTrans = new Vector3(-337, 310, 0);
+            
 
+            float x = ((6f - table.layers[k].columns.Length) / 2f);
+            //float x = Mathf.Ceil((6.0f - table.layers[k].columns[i].rows.Length) / 2f);
+            //print($" val = {x} and length = {table.layers[k].columns[i].rows.Length}");
+            firstTrans.x += x * (Cube.GetComponent<RectTransform>().localScale.x + 140);
+            
+
+            for (i = 0; i < table.layers[k].columns.Length; i++)
+            {
+                firstTrans.y  = 310;
+                float y = (6f - table.layers[k].columns[i].rows.Length) / 2f;
+                firstTrans.y += y * (Cube.GetComponent<RectTransform>().localScale.y - 140);
+
+
+
+
+
+                //print($"{table.layers[k].columns[i].rows.Length}");
+                //int rGap = 8 / table.layers[k].columns[i].rows.Length;
                 for (int j = 0; j < table.layers[k].columns[i].rows.Length; j++)
                 {
+
                     GameObject tile = Instantiate(Cube, transform.position, Quaternion.identity);
+                    //tile.GetComponent<Image>().color = new Color(255, 255, 255, 255);
                     table.layers[k].columns[i].rows[j].tile = tile;
-                    //grid.y[i].x[j] = tile;
-                    tile.GetComponent<RectTransform>().sizeDelta = new Vector2(123,127);
-                    tile.transform.SetParent(parrent);
                     
+                    //Debug.Log("f");
+                    //grid.y[i].x[j] = tile;
+                    tile.GetComponent<RectTransform>().sizeDelta = new Vector2(123, 127);
+                    tile.transform.SetParent(parrent);
                     //tile.GetComponent<MeshRenderer>().material = mat;
-                    tile.transform.GetComponent<RectTransform>().anchoredPosition = firstTrans;
-                    firstTrans.x += 130;
                     //firstTrans.y -= 309;
-                    firstTrans.x += Cube.GetComponent<RectTransform>().localScale.x;
-
-
+                    //firstTrans.x += Cube.GetComponent<RectTransform>().localScale.x + 140;
+                    tile.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                     tile.gameObject.name = $"layer = {k} , col = {i} , row {j}";
+
+                    tile.transform.GetComponent<RectTransform>().anchoredPosition = firstTrans;
+                    firstTrans.y += Cube.GetComponent<RectTransform>().localScale.y - 140;
                 }
-                firstTrans.x = parrent.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.x;
-                firstTrans.y -= 145;
+                firstTrans.x += (Cube.GetComponent<RectTransform>().localScale.x + 140);
+
+               
             }
+            i = 0;
             firstTrans.z -= Cube.transform.localScale.z;
-            var tempZPos = firstTrans;
-            firstTrans = parrent.GetChild(0).GetComponent<RectTransform>().anchoredPosition;
+            Vector3 tempZPos = firstTrans;
             firstTrans.z = tempZPos.z;
         }
         GiveIds();
+        ActivateLayer(GetTopLayer());
     }
     public int random()
     {
-        return UnityEngine.Random.Range(0, materials.Count - 1);
+        return UnityEngine.Random.Range(0, materials.Count);
     }
     void GiveIds()
     {
@@ -86,14 +117,12 @@ public class BoardManager : MonoBehaviour
         List<Tile> tiles = new List<Tile>();
         foreach (var item in table.layers)
         {
+            doneSprite.Clear();
             foreach (var c in item.columns)
             {
                 foreach (var r in c.rows)
                 {
                     tiles.Add(r.tile.GetComponent<Tile>());
-
-
-                    
                 }
             }
             while (tiles.Count > 0)
@@ -104,33 +133,180 @@ public class BoardManager : MonoBehaviour
                 tiles[temp].id = id;
                 tiles[temp].gameObject.name += $" ,id = {id}";
                 tiles[temp].SetImage(materials[materialToUse]);
-                
+
                 tiles.RemoveAt(temp);
                 //Debug.Log(materialToUse);
-                
+
                 index++;
                 if (index == 4)
                 {
                     id++;
                     index = 0;
-                    //materials.Remove(materials[materialToUse]);
+                    doneSprite.Add(materialToUse);
+
+                reselect:
+
                     materialToUse = random();
+                    if(doneSprite.Count==9)
+                    {
+                        goto dontreselect;
+                    }
+                    if(doneSprite.Contains(materialToUse))
+                    {
+                        goto reselect;
+                    }
+                dontreselect:
+                    Debug.Log("here");
+                    
+                    
+                    
+                    //materials.Remove(materials[materialToUse]);
+                    //materialToUse = random();
+                    
                 }
             }
 
         }
 
     }
+    public void ActivateLayer(int layerNumber)
+    {
+        try
+        {
+            foreach (var item in table.layers)
+            {
+                foreach (var item2 in item.columns)
+                {
+                    foreach (var item3 in item2.rows)
+                    {
+                        item3.tile.GetComponent<Image>().color = deselectColor;
+                        item3.tile.GetComponent<Button>().enabled = false;
+                    }
+                }
+            }
+            foreach (var item in table.layers[layerNumber].columns)
+            {
+                foreach (var go in item.rows)
+                {
+                    var color = go.tile.GetComponent<Image>().color;
+                    color.r = 255;
+                    color.g = 255;
+                    color.b = 255;
+                    color.a = 255;
+                    go.tile.GetComponent<Image>().color = color;
+                    go.tile.GetComponent<Button>().enabled = true;
 
+                }
+            }
+        }
+        catch(System.Exception)
+        {
+
+        }
+        
+    }
+
+    public int GetTopLayer()
+    {
+        
+        //for(int i=0;i<table.layers.Length;i++)
+        //{
+        //    if(table.layers[i]==null)
+        //    {
+        //        return i-1;
+        //    }
+                
+        //}
+        
+        return table.layers.Length-1;
+    }
+    public void RemoveTopLayer()
+    {
+        try
+        {
+            List<Layer> temp = table.layers.ToList();
+            temp.RemoveAt(GetTopLayer());
+            table.layers = temp.ToArray();
+        }
+        catch(System.Exception)
+        {
+
+        }
+
+    }
+    public void RemoveEmptyRows()
+    {
+        try
+        {
+            int n = 0;
+            //Debug.Log(GetTopLayer());
+
+            for (int i = 0; i < table.layers[GetTopLayer()].columns.Length; i++)
+            {
+
+                for (int j = 0; j < table.layers[GetTopLayer()].columns[i].rows.Length; j++)
+                {
+
+                    if (!table.layers[GetTopLayer()].columns[i].rows[j].tile.activeSelf)
+                    {
+                        //table.layers[GetTopLayer()] = null;
+                        n++;
+                        //print(n);
+                        //ActivateLayer(GetTopLayer()-1);
+                    }
+                }
+            }
+            if (n >= table.layers[GetTopLayer()].columns.Length * table.layers[GetTopLayer()].columns[0].rows.Length)
+            {
+                RemoveTopLayer();
+                ActivateLayer(GetTopLayer());
+            }
+        }
+        catch(System.Exception)
+        {
+
+        }
+       
+            
+
+        
+    }
+    public int GetTileCount(int layerId)
+    {
+        return table.layers[GetTopLayer()].columns.Length * table.layers[GetTopLayer()].columns[0].rows.Length;
+    }
+    public List<GameObject> GetTopLayerTiles()
+    {
+        List<GameObject> temp = new List<GameObject>();
+        try
+        {
+            
+            int topLayer = GetTopLayer();
+            for (int i = 0; i < table.layers[GetTopLayer()].columns.Length; i++)
+            {
+                for (int j = 0; j < table.layers[GetTopLayer()].columns[i].rows.Length; j++)
+                {
+                    temp.Add(table.layers[GetTopLayer()].columns[i].rows[j].tile);
+                }
+            }
+            
+        }
+        catch(System.Exception)
+        {
+
+        }
+        return temp;
+    }
 }
 
 
 [System.Serializable]
 public class Row
 {
-    public Row(){
+    public Row()
+    {
     }
-   [field: SerializeField] public GameObject tile;
+    [field: SerializeField] public GameObject tile;
 }
 [System.Serializable]
 
@@ -144,14 +320,14 @@ public class Column
             rows[i] = new Row();
         }
     }
-   [field: SerializeField] public Row[] rows;
+    [field: SerializeField] public Row[] rows;
 }
 [System.Serializable]
 
 public class Layer
 {
 
-    public Layer(int columnAmount,int rowAmount)
+    public Layer(int columnAmount, int rowAmount)
     {
         columns = new Column[columnAmount];
         for (int i = 0; i < columnAmount; i++)
@@ -160,18 +336,32 @@ public class Layer
         }
     }
 
-   [field: SerializeField]public Column[] columns;
+    [field: SerializeField] public Column[] columns;
+    
 }
 [System.Serializable]
 public class Table
 {
-    [field:SerializeField]public Layer[] layers;
-    public Table(int layerAmount,int columnAmount,int rowAmount)
+    [field: SerializeField] public Layer[] layers;
+    [field: SerializeField] public string levelName;
+    public Table(int layerAmount, int columnAmount, int rowAmount)
     {
         layers = new Layer[layerAmount];
         for (int i = 0; i < layerAmount; i++)
         {
-            layers[i] = new Layer(columnAmount,rowAmount);
+            layers[i] = new Layer(columnAmount, rowAmount);
         }
+    }
+    public int GetTopLayerTiles()
+    {
+        return 1;
+    }
+    public Table(Layer[] layers)
+    {
+        this.layers = layers;
+    }
+    public Table()
+    {
+
     }
 }

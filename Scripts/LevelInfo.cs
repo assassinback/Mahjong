@@ -9,7 +9,7 @@ public class LevelInfo
     public bool levelUnlocked=false;
     public int levelStars=0;
     public float levelTime=0;
-    public int rows=0;
-    public int columns = 0;
-    public int layers = 0;
+    //public int rows=0;
+    //public int columns = 0;
+    //public int layers = 0;
 }

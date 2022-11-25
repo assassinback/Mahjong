@@ -35,7 +35,9 @@ public class UIManager : MonoBehaviour
     public Sprite FilledStarLevelComplete;
     public Sprite EmptyStarLevelFail;
     public GameObject[] stars;
-
+    public GameObject scrollViewCardSelected;
+    public GameObject selectedCardImage;
+    public Button nextLevelButton;
     private void Start()
     {
         SetLimitedValues();
@@ -138,6 +140,7 @@ public class UIManager : MonoBehaviour
 
                 }
                 btn.GetComponent<LevelStartButton>().levelInfo = LevelManager._instance.levelCount[i];
+                btn.GetComponent<LevelStartButton>().patternInfo = LevelManager._instance.levelPattern[i];
             }
             else
             {
@@ -171,6 +174,7 @@ public class UIManager : MonoBehaviour
     }
     public void GotoLevelSelectPanel()
     {
+        TileManager._instance.ClearCards();
         DisableAllHomeUI();
         DisableAllCanvas();
         ShowUICanvas();
@@ -225,6 +229,21 @@ public class UIManager : MonoBehaviour
                 stars[i].GetComponent<Image>().sprite = EmptyStarLevelFail;
             }
             
+        }
+    }
+    public void AddToStack()
+    {
+        foreach (Transform child in scrollViewCardSelected.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        List<SelectTile> selectTiles = TileManager._instance.selectTiles;
+        for (int i=0;i<selectTiles.Count;i++)
+        {
+            GameObject cardImage=Instantiate(selectedCardImage);
+            cardImage.transform.SetParent(scrollViewCardSelected.transform);
+            cardImage.GetComponent<Image>().sprite = selectTiles[i].gameObject.GetComponent<Image>().sprite;
+            //selectTiles[i].gameObject.GetComponent<Tile>().
         }
     }
 }
