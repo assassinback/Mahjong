@@ -242,77 +242,59 @@ public class UIManager : MonoBehaviour
         CreateStack();
         //SortStack();
     }
-    public List<StackTileData> SortStack()
+    public List<SelectTile> SortStack(List<SelectTile> data1)
     {
 
-        //foreach (Transform child in scrollViewCardSelected.transform)
-        //{
-        //    data.Add(child.GetComponent<StackTileData>());
-        //}
-        data = data.OrderBy(go => go.id).ToList();
-        //StackTileData temp;
-        //int smallest;
-        //for (int i = 0; i < data.Count; i++)
-        //{
-        //    smallest = i;
-        //    for (int j = 0; j < data.Count; j++)
-        //    {
-        //        if (data[j].id < data[smallest].id)
-        //        {
-        //            smallest = j;
-        //        }
-        //    }
-        //    temp = data[smallest];
-        //    data[smallest] = data[i];
-        //    data[i] = temp;
-        //}
-        //for (int i = 0; i < data.Count; i++)
-        //{
-        //    print(data[i].image.name);
-        //}
+        data1 = data1.OrderBy(go => go.id).ToList();
+        
 
-        return data;
+        return data1;
     }
     public void CreateStack()
     {
-        foreach (Transform child in scrollViewCardSelected.transform)
+        for (int i = 0; i < scrollViewCardSelected.transform.childCount; i++)
         {
-            DestroyImmediate(child.gameObject);
+            scrollViewCardSelected.transform.GetChild(i).gameObject.SetActive(false);
         }
-
-        StartCoroutine(Delay123());
+        List<SelectTile> selectTiles = TileManager._instance.selectTiles;
+        selectTiles = SortStack(selectTiles);
+        for (int i=0;i< selectTiles.Count; i++)
+        {
+            scrollViewCardSelected.transform.GetChild(i).gameObject.SetActive(true);
+            scrollViewCardSelected.transform.GetChild(i).gameObject.GetComponent<Image>().sprite=selectTiles[i].gameObject.GetComponent<Image>().sprite;
+        }
     }
     public IEnumerator Delay123()
     {
         yield return new WaitForSeconds(0.08f);
-        List<SelectTile> selectTiles = TileManager._instance.selectTiles;
-        data.Clear();
-        for (int i = 0; i < selectTiles.Count; i++)
-        {
-            GameObject cardImage = Instantiate(selectedCardImage);
-            cardImage.transform.SetParent(scrollViewCardSelected.transform);
-            //cardImage.name =i.ToString();
-            //cardImage.GetComponent<Image>().sprite = selectTiles[i].gameObject.GetComponent<Image>().sprite;
-            cardImage.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-            cardImage.AddComponent<StackTileData>();
-            cardImage.GetComponent<StackTileData>().id = selectTiles[i].gameObject.GetComponent<Tile>().id;
-            cardImage.GetComponent<StackTileData>().image = selectTiles[i].gameObject.GetComponent<Image>().sprite;
-            //print(data.Count + " "+ i);
-            data.Add(cardImage.GetComponent<StackTileData>());
-            //print(data.Count + " " + i);
-            //selectTiles[i].gameObject.GetComponent<Tile>().
-        }
-        //print(data[0].image.name);
-        data = SortStack();
+        //List<SelectTile> selectTiles = TileManager._instance.selectTiles;
+        //data.Clear();
+        //for (int i = 0; i < selectTiles.Count; i++)
+        //{
+        //    GameObject cardImage = Instantiate(selectedCardImage);
+        //    cardImage.transform.SetParent(scrollViewCardSelected.transform);
+        //    //cardImage.name =i.ToString();
+        //    //cardImage.GetComponent<Image>().sprite = selectTiles[i].gameObject.GetComponent<Image>().sprite;
+        //    cardImage.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+        //    cardImage.AddComponent<StackTileData>();
+        //    cardImage.GetComponent<StackTileData>().id = selectTiles[i].gameObject.GetComponent<Tile>().id;
+        //    cardImage.GetComponent<StackTileData>().image = selectTiles[i].gameObject.GetComponent<Image>().sprite;
+        //    //print(data.Count + " "+ i);
+        //    data.Add(cardImage.GetComponent<StackTileData>());
+        //    //print(data.Count + " " + i);
+        //    //selectTiles[i].gameObject.GetComponent<Tile>().
+        //}
+        ////print(data[0].image.name);
+        //data = SortStack();
 
-        int j = 0;
-        foreach (Transform child in scrollViewCardSelected.transform)
-        {
-            child.GetComponent<StackTileData>().id = data[j].id;
-            child.GetComponent<StackTileData>().image = data[j].image;
-            child.GetComponent<Image>().sprite = data[j].image;
-            print(j);
-            j++;
-        }
+        //int j = 0;
+        //foreach (Transform child in scrollViewCardSelected.transform)
+        //{
+        //    child.GetComponent<StackTileData>().id = data[j].id;
+        //    child.GetComponent<StackTileData>().image = data[j].image;
+        //    child.GetComponent<Image>().sprite = data[j].image;
+        //    print(j);
+        //    j++;
+        //}
     }
 }
