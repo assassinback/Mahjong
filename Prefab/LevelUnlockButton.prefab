@@ -220,8 +220,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 97804dd9fcd989f438be6599c8acff89, type: 2}
-  m_sharedMaterial: {fileID: 6445529294240325601, guid: 97804dd9fcd989f438be6599c8acff89, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: df398b5c10d669a42898afbd721cdac4, type: 2}
+  m_sharedMaterial: {fileID: 1797428104967011233, guid: df398b5c10d669a42898afbd721cdac4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -507,3 +507,7 @@ MonoBehaviour:
     levelUnlocked: 0
     levelStars: 0
     levelTime: 0
+  patternInfo:
+    layers: []
+    levelName: 
+  startLevelButton: {fileID: 0}

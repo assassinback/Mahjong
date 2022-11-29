@@ -102,6 +102,12 @@ public class TileManager : MonoBehaviour
             UIManager._instance.nextLevelButton.onClick.RemoveAllListeners();
             UIManager._instance.nextLevelButton.onClick.AddListener(GameManager._instance.LevelFailed);
             GameManager._instance.Pause();
+            
+            if (GoogleAdsScript._instance.interstitial.IsLoaded())
+            {
+                GoogleAdsScript._instance.interstitial.Show();
+            }
+            GoogleAdsScript._instance.RequestInterstitial();
         }
         else if (cards.Count <= 0)
         {
@@ -143,7 +149,12 @@ public class TileManager : MonoBehaviour
             LevelManager._instance.GetPatterns();
             LevelManager._instance.GetLevelInfo();
             UIManager._instance.ShowLevelInfo();
+            if (GoogleAdsScript._instance.interstitial.IsLoaded())
+            {
+                GoogleAdsScript._instance.interstitial.Show();
+            }
             GameManager._instance.Pause();
+
             
         }
     }    

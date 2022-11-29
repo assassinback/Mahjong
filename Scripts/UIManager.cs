@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-
+using System.Linq;
+[System.Serializable]
 public class UIManager : MonoBehaviour
 {
     public static UIManager _instance;
@@ -38,6 +39,7 @@ public class UIManager : MonoBehaviour
     public GameObject scrollViewCardSelected;
     public GameObject selectedCardImage;
     public Button nextLevelButton;
+    [field: SerializeField] public List<StackTileData> data = new List<StackTileData>();
     private void Start()
     {
         SetLimitedValues();
@@ -124,6 +126,10 @@ public class UIManager : MonoBehaviour
     }
     public void ShowLevelInfo()
     {
+        foreach (Transform child in scrollViewLevels.transform)
+        {
+            Destroy(child.gameObject);
+        }
         for (int i = 0; i < GameManager._instance.numberOfLevels; i++)
         {
             if (LevelManager._instance.levelCount[i].levelUnlocked)
@@ -233,17 +239,80 @@ public class UIManager : MonoBehaviour
     }
     public void AddToStack()
     {
+        CreateStack();
+        //SortStack();
+    }
+    public List<StackTileData> SortStack()
+    {
+
+        //foreach (Transform child in scrollViewCardSelected.transform)
+        //{
+        //    data.Add(child.GetComponent<StackTileData>());
+        //}
+        data = data.OrderBy(go => go.id).ToList();
+        //StackTileData temp;
+        //int smallest;
+        //for (int i = 0; i < data.Count; i++)
+        //{
+        //    smallest = i;
+        //    for (int j = 0; j < data.Count; j++)
+        //    {
+        //        if (data[j].id < data[smallest].id)
+        //        {
+        //            smallest = j;
+        //        }
+        //    }
+        //    temp = data[smallest];
+        //    data[smallest] = data[i];
+        //    data[i] = temp;
+        //}
+        //for (int i = 0; i < data.Count; i++)
+        //{
+        //    print(data[i].image.name);
+        //}
+
+        return data;
+    }
+    public void CreateStack()
+    {
         foreach (Transform child in scrollViewCardSelected.transform)
         {
-            Destroy(child.gameObject);
+            DestroyImmediate(child.gameObject);
         }
+
+        StartCoroutine(Delay123());
+    }
+    public IEnumerator Delay123()
+    {
+        yield return new WaitForSeconds(0.08f);
         List<SelectTile> selectTiles = TileManager._instance.selectTiles;
-        for (int i=0;i<selectTiles.Count;i++)
+        data.Clear();
+        for (int i = 0; i < selectTiles.Count; i++)
         {
-            GameObject cardImage=Instantiate(selectedCardImage);
+            GameObject cardImage = Instantiate(selectedCardImage);
             cardImage.transform.SetParent(scrollViewCardSelected.transform);
-            cardImage.GetComponent<Image>().sprite = selectTiles[i].gameObject.GetComponent<Image>().sprite;
+            //cardImage.name =i.ToString();
+            //cardImage.GetComponent<Image>().sprite = selectTiles[i].gameObject.GetComponent<Image>().sprite;
+            cardImage.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            cardImage.AddComponent<StackTileData>();
+            cardImage.GetComponent<StackTileData>().id = selectTiles[i].gameObject.GetComponent<Tile>().id;
+            cardImage.GetComponent<StackTileData>().image = selectTiles[i].gameObject.GetComponent<Image>().sprite;
+            //print(data.Count + " "+ i);
+            data.Add(cardImage.GetComponent<StackTileData>());
+            //print(data.Count + " " + i);
             //selectTiles[i].gameObject.GetComponent<Tile>().
+        }
+        //print(data[0].image.name);
+        data = SortStack();
+
+        int j = 0;
+        foreach (Transform child in scrollViewCardSelected.transform)
+        {
+            child.GetComponent<StackTileData>().id = data[j].id;
+            child.GetComponent<StackTileData>().image = data[j].image;
+            child.GetComponent<Image>().sprite = data[j].image;
+            print(j);
+            j++;
         }
     }
 }

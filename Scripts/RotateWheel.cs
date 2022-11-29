@@ -4,8 +4,8 @@ using UnityEngine.UI ;
 
 public class RotateWheel : MonoBehaviour {
    [SerializeField] private Button uiSpinButton ;
-   //[SerializeField] private Text uiSpinButtonText ;
-
+    //[SerializeField] private Text uiSpinButtonText ;
+    public static bool adWatched;
    [SerializeField] private PickerWheel pickerWheel ;
 
 
@@ -16,16 +16,27 @@ public class RotateWheel : MonoBehaviour {
          //uiSpinButtonText.text = "Spinning" ;
 
          pickerWheel.OnSpinEnd (wheelPiece => {
-            Debug.Log (
-               @" <b>Index:</b> " + wheelPiece.Index + "           <b>Label:</b> " + wheelPiece.Label
-               + "\n <b>Amount:</b> " + wheelPiece.Amount + "      <b>Chance:</b> " + wheelPiece.Chance + "%"
-            ) ;
-             addSpecialItems(wheelPiece.Amount, wheelPiece.Label);
+            
+            addSpecialItems(wheelPiece.Amount, wheelPiece.Label);
             uiSpinButton.interactable = true ;
             //uiSpinButtonText.text = "Spin" ;
          }) ;
-
-         pickerWheel.Spin () ;
+         if (GoogleAdsScript._instance.rewardedAd.IsLoaded())
+         {
+              
+              GoogleAdsScript._instance.rewardedAd.Show();
+         }
+         GoogleAdsScript._instance.RequestRewarded();
+         if(adWatched)
+         {
+              
+              pickerWheel.Spin();
+         }
+         else
+         {
+              uiSpinButton.interactable = true;
+         }
+         
 
       }) ;
 

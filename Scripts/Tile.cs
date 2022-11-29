@@ -10,10 +10,15 @@ public class Tile : MonoBehaviour
 {
     TextMeshProUGUI coordinate;
     BoardManager bm;
-    public int id=0;
+    public int id;
+    public int matchId;
+    public bool isActivated;
+    public Image image;
+    
     public void SetImage(Sprite material)
     {
-        GetComponent<Image>().sprite = material;
+        image = GetComponent<Image>();
+        image.sprite = material;
     }    
     private void Start()
     {

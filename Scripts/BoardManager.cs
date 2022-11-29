@@ -15,6 +15,7 @@ public class BoardManager : MonoBehaviour
     */
     [field: SerializeField] public Table table;
     public Color deselectColor;
+    public Color selectColor;
     private void Awake()
     {
         _instance = this;
@@ -22,7 +23,6 @@ public class BoardManager : MonoBehaviour
     private void Start()
     {
         //StartGenerating();
-
 
     }
     public void StartGenerating()
@@ -35,11 +35,6 @@ public class BoardManager : MonoBehaviour
     }
     public void GenerateBoard()
     {
-        //if (Mathf.Pow( columns*rows,layers)%4 != 0)
-        //{
-        //    return;
-        //}
-        //Material black = Resources.Load<Material>("Black"), white = Resources.Load<Material>("White");
         GameObject Cube = Resources.Load<GameObject>("Tile");
         
         
@@ -78,7 +73,8 @@ public class BoardManager : MonoBehaviour
                     GameObject tile = Instantiate(Cube, transform.position, Quaternion.identity);
                     //tile.GetComponent<Image>().color = new Color(255, 255, 255, 255);
                     table.layers[k].columns[i].rows[j].tile = tile;
-                    
+                    table.layers[k].columns[i].rows[j].tileScript = tile.GetComponent<Tile>();
+                    table.layers[k].columns[i].rows[j].tile.GetComponent<RectTransform>().position = new Vector3(table.layers[k].columns[i].rows[j].tile.GetComponent<RectTransform>().position.x, table.layers[k].columns[i].rows[j].tile.GetComponent<RectTransform>().position.y,50);
                     //Debug.Log("f");
                     //grid.y[i].x[j] = tile;
                     tile.GetComponent<RectTransform>().sizeDelta = new Vector2(123, 127);
@@ -133,7 +129,7 @@ public class BoardManager : MonoBehaviour
                 tiles[temp].id = id;
                 tiles[temp].gameObject.name += $" ,id = {id}";
                 tiles[temp].SetImage(materials[materialToUse]);
-
+                tiles[temp].matchId = materialToUse;
                 tiles.RemoveAt(temp);
                 //Debug.Log(materialToUse);
 
@@ -156,7 +152,7 @@ public class BoardManager : MonoBehaviour
                         goto reselect;
                     }
                 dontreselect:
-                    Debug.Log("here");
+                    continue;
                     
                     
                     
@@ -181,6 +177,7 @@ public class BoardManager : MonoBehaviour
                     {
                         item3.tile.GetComponent<Image>().color = deselectColor;
                         item3.tile.GetComponent<Button>().enabled = false;
+                        item3.tileScript.isActivated = false;
                     }
                 }
             }
@@ -189,11 +186,9 @@ public class BoardManager : MonoBehaviour
                 foreach (var go in item.rows)
                 {
                     var color = go.tile.GetComponent<Image>().color;
-                    color.r = 255;
-                    color.g = 255;
-                    color.b = 255;
-                    color.a = 255;
-                    go.tile.GetComponent<Image>().color = color;
+                    
+                    go.tile.GetComponent<Image>().color = selectColor;
+                    go.tileScript.isActivated = true;
                     go.tile.GetComponent<Button>().enabled = true;
 
                 }
@@ -219,6 +214,11 @@ public class BoardManager : MonoBehaviour
         //}
         
         return table.layers.Length-1;
+    }
+    public int GetSecondTopLayer()
+    {
+        
+        return table.layers.Length-2;
     }
     public void RemoveTopLayer()
     {
@@ -256,6 +256,7 @@ public class BoardManager : MonoBehaviour
                     }
                 }
             }
+            
             if (n >= table.layers[GetTopLayer()].columns.Length * table.layers[GetTopLayer()].columns[0].rows.Length)
             {
                 RemoveTopLayer();
@@ -273,7 +274,7 @@ public class BoardManager : MonoBehaviour
     }
     public int GetTileCount(int layerId)
     {
-        return table.layers[GetTopLayer()].columns.Length * table.layers[GetTopLayer()].columns[0].rows.Length;
+        return table.layers[layerId].columns.Length * table.layers[layerId].columns[0].rows.Length;
     }
     public List<GameObject> GetTopLayerTiles()
     {
@@ -297,6 +298,31 @@ public class BoardManager : MonoBehaviour
         }
         return temp;
     }
+    public void ActivateTilesInLayer(int layer,int amount)
+    {
+        if (layer<0)
+        {
+            return;
+        }
+        int temp = amount;
+        for (int i = 0; i < table.layers[layer].columns.Length; i++)
+        {
+            for (int j = 0; j < table.layers[layer].columns[i].rows.Length; j++)
+            {
+                if (!table.layers[layer].columns[i].rows[j].tileScript.isActivated)
+                {
+                    table.layers[layer].columns[i].rows[j].tileScript.image.color = selectColor;
+                    table.layers[layer].columns[i].rows[j].tileScript.isActivated = true;
+                    //table.layers[layer].columns[i].rows[j].tileScript.GetComponent<Button>().enabled = true;
+                    temp -= 1;
+                }
+                if (temp<=0)
+                {
+                    return;
+                }
+            }
+        }
+    }
 }
 
 
@@ -307,6 +333,7 @@ public class Row
     {
     }
     [field: SerializeField] public GameObject tile;
+    [field: SerializeField] public Tile tileScript;
 }
 [System.Serializable]
 

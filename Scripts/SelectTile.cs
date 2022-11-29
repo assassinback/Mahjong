@@ -20,13 +20,14 @@ public class SelectTile : MonoBehaviour
     }
     private void selectTile()
     {
-        UIManager._instance.AddToStack();
+        //UIManager._instance.AddToStack();
         if (TileManager._instance.selectTiles.Count >= 10)
         {
 
         }
         if (!TileManager._instance.selectTiles.Contains(this))
         {
+            gameObject.SetActive(false);
             TileManager._instance.selectedCount++;
             TileManager._instance.selectTiles.Add(this);
             UIManager._instance.AddToStack();
@@ -61,6 +62,7 @@ public class SelectTile : MonoBehaviour
 
                         }
                     }
+                    BoardManager._instance.ActivateTilesInLayer(BoardManager._instance.GetSecondTopLayer(), 4);
                     TileManager._instance.RefreshSelectTiles(id);
                     UIManager._instance.AddToStack();
                     TileManager._instance.RefreshCards(id);
