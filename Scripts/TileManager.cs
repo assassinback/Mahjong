@@ -32,6 +32,8 @@ public class TileManager : MonoBehaviour
         ClearCards();
         cards.Clear();
         selectTiles.Clear();
+        UIManager._instance.AddToStack();
+        BoardManager._instance.table = LevelManager._instance.levelPattern[int.Parse(currentLevelInfo.levelName)-1];
         BoardManager._instance.StartGenerating();
         LoadLevel();
         UIManager._instance.ResumeButtonClicked();

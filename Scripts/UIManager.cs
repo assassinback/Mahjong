@@ -27,6 +27,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI timerWheel;
     public TextMeshProUGUI levelCompleteText;
     public TextMeshProUGUI levelNameText;
+    public TextMeshProUGUI levelNameTextLevelCompleteLabel;
     public GameObject gameCanvas;
     public GameObject UICanvas;
     public GameObject inGameUI;
@@ -212,6 +213,7 @@ public class UIManager : MonoBehaviour
     public void SetCompleteLevelText(string text)
     {
         levelCompleteText.text = text;
+        levelNameTextLevelCompleteLabel.text = text;
     }
     public void SetSliderValue()
     {

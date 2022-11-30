@@ -313,7 +313,7 @@ public class BoardManager : MonoBehaviour
                 {
                     table.layers[layer].columns[i].rows[j].tileScript.image.color = selectColor;
                     table.layers[layer].columns[i].rows[j].tileScript.isActivated = true;
-                    //table.layers[layer].columns[i].rows[j].tileScript.GetComponent<Button>().enabled = true;
+                    table.layers[layer].columns[i].rows[j].tileScript.GetComponent<Button>().enabled = true;
                     temp -= 1;
                 }
                 if (temp<=0)
