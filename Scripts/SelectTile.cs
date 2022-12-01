@@ -16,7 +16,7 @@ public class SelectTile : MonoBehaviour
     }
     private void Start()
     {
-        id=GetComponent<Tile>().id;
+        id=GetComponent<Tile>().matchId;
         //GameManager._instance.SetHints(1000);
         stopPosition = GameObject.FindGameObjectWithTag("iTweenPosition").GetComponent<RectTransform>().position;
     }
@@ -45,6 +45,7 @@ public class SelectTile : MonoBehaviour
                     {
                         //TileManager._instance.selectTiles.Remove(tile);
                         //Destroy(tile.gameObject);
+                        SoundManager._instance.PlayCardCompletedSound();
                         tile.gameObject.SetActive(false);
                         //BoardManager._instance.ActivateLayer(0);
                         BoardManager._instance.RemoveEmptyRows();
@@ -71,6 +72,7 @@ public class SelectTile : MonoBehaviour
     }
     private void selectTile()
     {
+        gameObject.GetComponent<AudioSource>().Play();
         //UIManager._instance.AddToStack();
         if (TileManager._instance.selectTiles.Count >= 10)
         {

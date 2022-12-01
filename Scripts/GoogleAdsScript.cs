@@ -151,7 +151,7 @@ public class GoogleAdsScript : MonoBehaviour
 #endif
 
         // Create a 320x50 banner at the top of the screen.
-        this.bannerView = new BannerView(adUnitId, AdSize.Banner, 0,-20 );
+        this.bannerView = new BannerView(adUnitId, AdSize.Banner,AdPosition.Top);
         // Called when an ad request has successfully loaded.
         this.bannerView.OnAdLoaded += this.HandleOnAdLoadedBanner;
         // Called when an ad request failed to load.
@@ -172,6 +172,7 @@ public class GoogleAdsScript : MonoBehaviour
     {
         MonoBehaviour.print("HandleAdLoaded event received");
         GameObject.Find("BANNER(Clone)").GetComponent<Canvas>().sortingOrder= 100;
+        GameObject.Find("BANNER(Clone)").GetComponent<Canvas>().transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(GameObject.Find("BANNER(Clone)").GetComponent<Canvas>().transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.x,0);
     }
     public void HandleOnAdFailedToLoadBanner(object sender, AdFailedToLoadEventArgs args)
     {

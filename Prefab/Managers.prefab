@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4232775252803364149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1791691251008430568}
+  m_Layer: 0
+  m_Name: Sound Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1791691251008430568
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4232775252803364149}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8643441188368477554}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8643441187594443439
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,6 +140,7 @@ MonoBehaviour:
   timerWheel: {fileID: 0}
   levelCompleteText: {fileID: 0}
   levelNameText: {fileID: 0}
+  levelNameTextLevelCompleteLabel: {fileID: 0}
   gameCanvas: {fileID: 0}
   UICanvas: {fileID: 0}
   inGameUI: {fileID: 0}
@@ -124,6 +156,7 @@ MonoBehaviour:
   scrollViewCardSelected: {fileID: 0}
   selectedCardImage: {fileID: 5714082442088300504, guid: 846c9d4dd8a2b384caef194c22418df2, type: 3}
   nextLevelButton: {fileID: 0}
+  data: []
 --- !u!1 &8643441188368477552
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,6 +190,7 @@ Transform:
   - {fileID: 8643441188648661802}
   - {fileID: 8643441187594443424}
   - {fileID: 5995659041237862616}
+  - {fileID: 1791691251008430568}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -276,6 +310,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5995659041237862616}
+  - component: {fileID: 5722766029905615249}
   m_Layer: 0
   m_Name: AdManager
   m_TagString: Untagged
@@ -298,3 +333,15 @@ Transform:
   m_Father: {fileID: 8643441188368477554}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5722766029905615249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8851664125125114081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5fa303049a5c524fada00009df5bf59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -27,8 +27,23 @@ public class TileManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
+    public void PlayLevel()
+    {
+        SoundManager._instance.PlayButtonClickSound();
+        ClearCards();
+        cards.Clear();
+        selectTiles.Clear();
+        UIManager._instance.AddToStack();
+        currentLevelInfo = LevelManager._instance.levelCount[LevelManager._instance.levelCount.Count - 1];
+        BoardManager._instance.table = LevelManager._instance.levelPattern[LevelManager._instance.levelPattern.Count - 1];
+        BoardManager._instance.StartGenerating();
+        LoadLevel();
+        UIManager._instance.ResumeButtonClicked();
+        UIManager._instance.SetLevelNameText("Level " + currentLevelInfo.levelName);
+    }
     public void RetryLevel()
     {
+        SoundManager._instance.PlayButtonClickSound();
         ClearCards();
         cards.Clear();
         selectTiles.Clear();
@@ -78,7 +93,7 @@ public class TileManager : MonoBehaviour
     {
         for (int k = 0; k < cards.Count; k++)
         {
-            if (id == cards[k].GetComponent<Tile>().id)
+            if (id == cards[k].GetComponent<Tile>().matchId)
             {
                 cards.RemoveAt(k);
                 k = -1;
@@ -162,6 +177,7 @@ public class TileManager : MonoBehaviour
     }    
     public void AddTime()
     {
+        SoundManager._instance.PlayButtonClickSound();
         if (GameManager._instance.GetTime() <= 0)
         {
             return;
@@ -176,6 +192,7 @@ public class TileManager : MonoBehaviour
     }
     public void UndoMove()
     {
+        SoundManager._instance.PlayButtonClickSound();
         if (GameManager._instance.GetUndo() <= 0 || selectTiles.Count<=0)
         {
             return;
@@ -191,7 +208,8 @@ public class TileManager : MonoBehaviour
     }
     public void GetHint()
     {
-        if(GameManager._instance.GetHints()<=0)
+        SoundManager._instance.PlayButtonClickSound();
+        if (GameManager._instance.GetHints()<=0)
         {
             return;
         }

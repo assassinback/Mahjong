@@ -40,6 +40,7 @@ public class UIManager : MonoBehaviour
     public GameObject scrollViewCardSelected;
     public GameObject selectedCardImage;
     public Button nextLevelButton;
+    public GameObject settingCanvas;
     [field: SerializeField] public List<StackTileData> data = new List<StackTileData>();
     private void Start()
     {
@@ -99,6 +100,7 @@ public class UIManager : MonoBehaviour
     }
     public void EnablePausePanel()
     {
+        SoundManager._instance.PlayButtonClickSound();
         DisableAllHomeUI();
         ShowInGameUI();
         pausePanel.SetActive(true);
@@ -106,16 +108,19 @@ public class UIManager : MonoBehaviour
     }
     public void EnableHomeScreen()
     {
+        SoundManager._instance.PlayButtonClickSound();
         DisableAllHomeUI();
         homeScreenPanel.SetActive(true);
     }
     public void EnableLevelSelectScreen()
     {
+        SoundManager._instance.PlayButtonClickSound();
         DisableAllHomeUI();
         levelSelectPanel.SetActive(true);
     }
     public void EnableLuckyWheelScreen()
     {
+        SoundManager._instance.PlayButtonClickSound();
         DisableAllHomeUI();
         luckyWheelPanel.SetActive(true);
         limitedButtonPanel.SetActive(true);
@@ -177,10 +182,20 @@ public class UIManager : MonoBehaviour
         gameCanvas.SetActive(false);
         UICanvas.SetActive(false);
         inGameUI.SetActive(false);
+        settingCanvas.SetActive(false);
         ResumeClicked();
+    }
+    public void EnableSettingsCanvas()
+    {
+        settingCanvas.SetActive(true);
+    }
+    public void DisableSettingsCanvas()
+    {
+        settingCanvas.SetActive(false);
     }
     public void GotoLevelSelectPanel()
     {
+        SoundManager._instance.PlayButtonClickSound();
         TileManager._instance.ClearCards();
         DisableAllHomeUI();
         DisableAllCanvas();
@@ -198,6 +213,7 @@ public class UIManager : MonoBehaviour
     }
     public void ResumeButtonClicked()
     {
+        SoundManager._instance.PlayButtonClickSound();
         DisableAllHomeUI();
         DisableAllCanvas();
         ShowGameCanvas();
@@ -265,38 +281,5 @@ public class UIManager : MonoBehaviour
             scrollViewCardSelected.transform.GetChild(i).gameObject.SetActive(true);
             scrollViewCardSelected.transform.GetChild(i).gameObject.GetComponent<Image>().sprite=selectTiles[i].gameObject.GetComponent<Image>().sprite;
         }
-    }
-    public IEnumerator Delay123()
-    {
-        yield return new WaitForSeconds(0.08f);
-        //List<SelectTile> selectTiles = TileManager._instance.selectTiles;
-        //data.Clear();
-        //for (int i = 0; i < selectTiles.Count; i++)
-        //{
-        //    GameObject cardImage = Instantiate(selectedCardImage);
-        //    cardImage.transform.SetParent(scrollViewCardSelected.transform);
-        //    //cardImage.name =i.ToString();
-        //    //cardImage.GetComponent<Image>().sprite = selectTiles[i].gameObject.GetComponent<Image>().sprite;
-        //    cardImage.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-        //    cardImage.AddComponent<StackTileData>();
-        //    cardImage.GetComponent<StackTileData>().id = selectTiles[i].gameObject.GetComponent<Tile>().id;
-        //    cardImage.GetComponent<StackTileData>().image = selectTiles[i].gameObject.GetComponent<Image>().sprite;
-        //    //print(data.Count + " "+ i);
-        //    data.Add(cardImage.GetComponent<StackTileData>());
-        //    //print(data.Count + " " + i);
-        //    //selectTiles[i].gameObject.GetComponent<Tile>().
-        //}
-        ////print(data[0].image.name);
-        //data = SortStack();
-
-        //int j = 0;
-        //foreach (Transform child in scrollViewCardSelected.transform)
-        //{
-        //    child.GetComponent<StackTileData>().id = data[j].id;
-        //    child.GetComponent<StackTileData>().image = data[j].image;
-        //    child.GetComponent<Image>().sprite = data[j].image;
-        //    print(j);
-        //    j++;
-        //}
     }
 }
