@@ -23,15 +23,15 @@ public class RotateWheel : MonoBehaviour {
          }) ;
          if (GoogleAdsScript._instance.rewardedAd.IsLoaded())
          {
-              
               GoogleAdsScript._instance.rewardedAd.Show();
+              adWatched = true;
          }
          GoogleAdsScript._instance.RequestRewarded();
          if(adWatched)
          {
-              
               pickerWheel.Spin();
-         }
+              adWatched = false;
+          }
          else
          {
               uiSpinButton.interactable = true;
