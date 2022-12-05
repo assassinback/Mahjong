@@ -14,12 +14,19 @@ public class Tile : MonoBehaviour
     public int matchId;
     public bool isActivated;
     public Image image;
-    
+    public bool isStacked;
+    public Button button;
+    public RectTransform rectTransform;
     public void SetImage(Sprite material)
     {
         image = GetComponent<Image>();
         image.sprite = material;
-    }    
+    }
+    private void Awake()
+    {
+        button = GetComponent<Button>();
+        rectTransform = GetComponent<RectTransform>();
+    }
     private void Start()
     {
         bm = BoardManager._instance;

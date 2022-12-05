@@ -93,7 +93,7 @@ public class TileManager : MonoBehaviour
     {
         for (int k = 0; k < cards.Count; k++)
         {
-            if (id == cards[k].GetComponent<Tile>().matchId)
+            if (id == cards[k].GetComponent<Tile>().id)
             {
                 cards.RemoveAt(k);
                 k = -1;

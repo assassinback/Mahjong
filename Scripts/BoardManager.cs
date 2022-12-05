@@ -16,6 +16,7 @@ public class BoardManager : MonoBehaviour
     [field: SerializeField] public Table table;
     public Color deselectColor;
     public Color selectColor;
+    public bool isStaked;
     private void Awake()
     {
         _instance = this;
@@ -165,6 +166,13 @@ public class BoardManager : MonoBehaviour
         }
 
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ActivateActivatedTiles();
+        }
+    }
     public void ActivateLayer(int layerNumber)
     {
         try
@@ -178,6 +186,7 @@ public class BoardManager : MonoBehaviour
                         item3.tile.GetComponent<Image>().color = deselectColor;
                         item3.tile.GetComponent<Button>().enabled = false;
                         item3.tileScript.isActivated = false;
+                        item3.tileScript.isStacked = true;
                     }
                 }
             }
@@ -190,6 +199,8 @@ public class BoardManager : MonoBehaviour
                     go.tile.GetComponent<Image>().color = selectColor;
                     go.tileScript.isActivated = true;
                     go.tile.GetComponent<Button>().enabled = true;
+                    go.tileScript.isStacked = false;
+
 
                 }
             }
@@ -272,6 +283,64 @@ public class BoardManager : MonoBehaviour
 
         
     }
+    public void ActivateActivatedTiles()
+    {
+
+        foreach (var ii in table.layers[GetSecondTopLayer()].columns)
+        {
+            foreach (var jj in ii.rows)
+            {
+                if (jj.tileScript.isActivated)
+                {
+                    jj.tileScript.isStacked = false;
+                    jj.tileScript.GetComponent<Button>().enabled = true;
+
+                }
+
+            }
+        }
+        foreach (var i in table.layers[GetTopLayer()].columns)
+        {
+
+            foreach (var j in i.rows)
+            {
+
+                foreach (var ii in table.layers[GetSecondTopLayer()].columns)
+                {
+                    foreach (var jj in ii.rows)
+                    {
+                        if (jj.tileScript.isActivated && !jj.tileScript.isStacked)
+                        {
+
+
+                            //print($"checking......{j.tile.gameObject.name} , {jj.tile.gameObject.name}  {Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position)}");
+                            if (Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position) < 75
+                                /*|| Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position) < 71*/ )
+                            {
+                                //print($"false......{j.tile.gameObject.name} , {jj.tile.gameObject.name}  {Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position)}");
+
+                                jj.tileScript.isStacked = true;
+                                jj.tileScript.GetComponent<Button>().enabled = false;
+
+
+                            }
+
+                        }
+                    }
+                }
+
+
+
+
+
+
+
+
+
+            }
+        }
+    }
+
     public int GetTileCount(int layerId)
     {
         return table.layers[layerId].columns.Length * table.layers[layerId].columns[0].rows.Length;

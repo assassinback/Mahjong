@@ -28,13 +28,14 @@ public class SelectTile : MonoBehaviour
         TileManager._instance.selectTiles.Add(this);
 
         UIManager._instance.AddToStack();
-
+        TileManager._instance.topLayerTiles = BoardManager._instance.GetTopLayerTiles();
         int j = 0;
         for (int i = 0; i < TileManager._instance.selectTiles.Count; i++)
         {
             if (TileManager._instance.selectTiles[i].id == id)
             {
                 j++;
+                
             }
             if (j == 4)
             {
@@ -54,7 +55,7 @@ public class SelectTile : MonoBehaviour
                         {
                             TileManager._instance.originalTime = TileManager._instance.currentLevelInfo.levelTime;
                         }
-                        TileManager._instance.topLayerTiles = BoardManager._instance.GetTopLayerTiles();
+                        
                         //StartCoroutine(CheckDestroy());
 
 
@@ -64,11 +65,14 @@ public class SelectTile : MonoBehaviour
                 BoardManager._instance.ActivateTilesInLayer(BoardManager._instance.GetSecondTopLayer(), 4);
                 TileManager._instance.RefreshSelectTiles(id);
                 UIManager._instance.AddToStack();
-                TileManager._instance.RefreshCards(id);
+                TileManager._instance.RefreshCards(GetComponent<Tile>().id);
+                BoardManager._instance.ActivateActivatedTiles();
+
                 //Destroy(this.gameObject);
                 return;
             }
         }
+        BoardManager._instance.ActivateActivatedTiles();
     }
     private void selectTile()
     {
@@ -88,7 +92,6 @@ public class SelectTile : MonoBehaviour
             iTween.MoveTo(this.gameObject, iTween.Hash("oncomplete","DeactivateCards", "position", stopPosition));
             
             stopPosition = new Vector3(165.5f, stopPosition.y, stopPosition.z);
-            
         }
         
     }
