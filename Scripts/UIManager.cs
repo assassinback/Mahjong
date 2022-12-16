@@ -111,6 +111,7 @@ public class UIManager : MonoBehaviour
         SoundManager._instance.PlayButtonClickSound();
         DisableAllHomeUI();
         homeScreenPanel.SetActive(true);
+        ResumeClicked();
     }
     public void EnableLevelSelectScreen()
     {
@@ -124,6 +125,7 @@ public class UIManager : MonoBehaviour
         DisableAllHomeUI();
         luckyWheelPanel.SetActive(true);
         limitedButtonPanel.SetActive(true);
+        //PauseClicked();
     }
     public void EnableLimitedButtonsScreen()
     {

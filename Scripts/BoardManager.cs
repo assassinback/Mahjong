@@ -285,7 +285,10 @@ public class BoardManager : MonoBehaviour
     }
     public void ActivateActivatedTiles()
     {
-
+        if (GetSecondTopLayer() < 0)
+        {
+            return;
+        }
         foreach (var ii in table.layers[GetSecondTopLayer()].columns)
         {
             foreach (var jj in ii.rows)
@@ -304,7 +307,7 @@ public class BoardManager : MonoBehaviour
 
             foreach (var j in i.rows)
             {
-
+                
                 foreach (var ii in table.layers[GetSecondTopLayer()].columns)
                 {
                     foreach (var jj in ii.rows)

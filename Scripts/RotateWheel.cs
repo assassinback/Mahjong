@@ -21,21 +21,22 @@ public class RotateWheel : MonoBehaviour {
             uiSpinButton.interactable = true ;
             //uiSpinButtonText.text = "Spin" ;
          }) ;
-         if (GoogleAdsScript._instance.rewardedAd.IsLoaded())
-         {
-              GoogleAdsScript._instance.rewardedAd.Show();
-              adWatched = true;
-         }
-         GoogleAdsScript._instance.RequestRewarded();
-         if(adWatched)
-         {
-              pickerWheel.Spin();
-              adWatched = false;
-          }
-         else
-         {
-              uiSpinButton.interactable = true;
-         }
+          pickerWheel.Spin();
+         // if (GoogleAdsScript._instance.rewardedAd.IsLoaded())
+         //{
+         //     GoogleAdsScript._instance.rewardedAd.Show();
+         //     adWatched = true;
+         //}
+         //GoogleAdsScript._instance.RequestRewarded();
+         //if(adWatched)
+         //{
+         //     pickerWheel.Spin();
+         //     adWatched = false;
+         // }
+         //else
+         //{
+         //     uiSpinButton.interactable = true;
+         //}
          
 
       }) ;

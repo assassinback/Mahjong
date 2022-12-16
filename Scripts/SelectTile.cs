@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class SelectTile : MonoBehaviour
 {
     public int id;
+    public Vector3 originalPosition;
     private Vector3 stopPosition;
     // Start is called before the first frame update
     void Awake()
@@ -17,12 +18,13 @@ public class SelectTile : MonoBehaviour
     private void Start()
     {
         id=GetComponent<Tile>().matchId;
+        originalPosition = gameObject.GetComponent<RectTransform>().anchoredPosition;
         //GameManager._instance.SetHints(1000);
         stopPosition = GameObject.FindGameObjectWithTag("iTweenPosition").GetComponent<RectTransform>().position;
     }
     public void DeactivateCards()
     {
-        this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(74,77);
+        //this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(74,77);
         gameObject.SetActive(false);
         TileManager._instance.selectedCount++;
         TileManager._instance.selectTiles.Add(this);
@@ -55,7 +57,7 @@ public class SelectTile : MonoBehaviour
                         {
                             TileManager._instance.originalTime = TileManager._instance.currentLevelInfo.levelTime;
                         }
-                        
+                        TileManager._instance.cards.Remove(tile.gameObject.GetComponent<RectTransform>());
                         //StartCoroutine(CheckDestroy());
 
 
@@ -65,14 +67,16 @@ public class SelectTile : MonoBehaviour
                 BoardManager._instance.ActivateTilesInLayer(BoardManager._instance.GetSecondTopLayer(), 4);
                 TileManager._instance.RefreshSelectTiles(id);
                 UIManager._instance.AddToStack();
-                TileManager._instance.RefreshCards(GetComponent<Tile>().id);
+                //TileManager._instance.RefreshCards(GetComponent<Tile>().id);
                 BoardManager._instance.ActivateActivatedTiles();
-
+                TileManager._instance.CheckLevelComplete();
                 //Destroy(this.gameObject);
                 return;
             }
         }
+        
         BoardManager._instance.ActivateActivatedTiles();
+        TileManager._instance.CheckLevelComplete();
     }
     private void selectTile()
     {
@@ -89,7 +93,7 @@ public class SelectTile : MonoBehaviour
             {
                 stopPosition = new Vector3(stopPosition.x+74, stopPosition.y, stopPosition.z);
             }
-            iTween.MoveTo(this.gameObject, iTween.Hash("oncomplete","DeactivateCards", "position", stopPosition));
+            iTween.MoveTo(gameObject, iTween.Hash("oncomplete","DeactivateCards", "position", stopPosition));
             
             stopPosition = new Vector3(165.5f, stopPosition.y, stopPosition.z);
         }

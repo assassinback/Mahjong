@@ -105,12 +105,14 @@ public class TileManager : MonoBehaviour
     {
         originalTime -= Time.deltaTime;
         UIManager._instance.SetSliderValue();
-        StartCoroutine(CheckLevelComplete());
+        if(originalTime <= 0 || selectTiles.Count >= 10)
+        {
+            CheckLevelComplete();
+        }
 
     }
-    private IEnumerator CheckLevelComplete()
+    public void CheckLevelComplete()
     {
-        yield return new WaitForSeconds(0.21f);
         if (originalTime <= 0 || selectTiles.Count >= 10)
         {
             UIManager._instance.ShowInGameUI();
@@ -118,6 +120,7 @@ public class TileManager : MonoBehaviour
             UIManager._instance.SetCompleteLevelText(levelFailText);
             UIManager._instance.nextLevelButton.onClick.RemoveAllListeners();
             UIManager._instance.nextLevelButton.onClick.AddListener(GameManager._instance.LevelFailed);
+            UIManager._instance.ShowStars(0);
             GameManager._instance.Pause();
             
             if (GoogleAdsScript._instance.interstitial.IsLoaded())
@@ -170,6 +173,7 @@ public class TileManager : MonoBehaviour
             {
                 GoogleAdsScript._instance.interstitial.Show();
             }
+            GoogleAdsScript._instance.RequestInterstitial();
             GameManager._instance.Pause();
 
             
@@ -197,6 +201,8 @@ public class TileManager : MonoBehaviour
         {
             return;
         }
+        selectTiles[selectTiles.Count - 1].gameObject.SetActive(true);
+        selectTiles[selectTiles.Count - 1].gameObject.GetComponent<RectTransform>().anchoredPosition= selectTiles[selectTiles.Count - 1].originalPosition;
         selectTiles.RemoveAt(selectTiles.Count-1);
         UIManager._instance.AddToStack();
         GameManager._instance.SetUndo(GameManager._instance.GetUndo() - 1);
