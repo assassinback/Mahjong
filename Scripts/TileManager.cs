@@ -127,7 +127,7 @@ public class TileManager : MonoBehaviour
             {
                 GoogleAdsScript._instance.interstitial.Show();
             }
-            GoogleAdsScript._instance.RequestInterstitial();
+            //GoogleAdsScript._instance.RequestInterstitial();
         }
         else if (cards.Count <= 0)
         {

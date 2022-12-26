@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         _instance = this;
+        PlayingFirstTime();
     }
     public void Pause()
     {
@@ -63,5 +64,17 @@ public class GameManager : MonoBehaviour
     {
         TileManager._instance.RetryLevel();
     }
+    public void PlayingFirstTime()
+    {
+        if(PlayerPrefs.HasKey("PlayedFirstTime"))
+        {
+            return;
+        }
+        PlayerPrefs.SetInt("PlayedFirstTime", 1);
+        SetUndo(0);
+        SetTime(0);
+        SetHints(0);
 
+    }
+    
 }

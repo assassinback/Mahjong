@@ -26,5 +26,6 @@ public class LevelStartButton : MonoBehaviour
         BoardManager._instance.StartGenerating();
         UIManager._instance.ShowGameCanvas();
         TileManager._instance.LoadLevel();
+        UIManager._instance.FirstTimeLevel();
     }
 }

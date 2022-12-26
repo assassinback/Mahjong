@@ -25,6 +25,7 @@ public class SelectTile : MonoBehaviour
     public void DeactivateCards()
     {
         //this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(74,77);
+        UIManager._instance.FirstLevelScreenClicked();
         gameObject.SetActive(false);
         TileManager._instance.selectedCount++;
         TileManager._instance.selectTiles.Add(this);
@@ -52,7 +53,7 @@ public class SelectTile : MonoBehaviour
                         tile.gameObject.SetActive(false);
                         //BoardManager._instance.ActivateLayer(0);
                         BoardManager._instance.RemoveEmptyRows();
-                        TileManager._instance.originalTime += 2f;
+                        TileManager._instance.originalTime += 0.165f;
                         if (TileManager._instance.originalTime > TileManager._instance.currentLevelInfo.levelTime)
                         {
                             TileManager._instance.originalTime = TileManager._instance.currentLevelInfo.levelTime;

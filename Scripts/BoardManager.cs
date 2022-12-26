@@ -41,7 +41,7 @@ public class BoardManager : MonoBehaviour
         
 
         //Material mat = white;
-        Transform parrent = transform.GetChild(0);
+        Transform parrent = transform.GetChild(1);
         //  Setting Tiles
         Vector3 firstTrans = new Vector3();
         int i = 0;
@@ -100,6 +100,7 @@ public class BoardManager : MonoBehaviour
         }
         GiveIds();
         ActivateLayer(GetTopLayer());
+        ChangeInactiveTilesSize();
     }
     public int random()
     {
@@ -166,11 +167,70 @@ public class BoardManager : MonoBehaviour
         }
 
     }
+    public void ChangeInactiveTilesSize()
+    {
+        GameObject[] inactiveTiles = GetAllTiles();
+        foreach (var item in inactiveTiles)
+        {
+            item.GetComponent<RectTransform>().sizeDelta = new Vector2(99,108);
+        }
+    }
+    public GameObject[] GetAllTiles()
+    {
+        List<GameObject> tiles = new List<GameObject>();
+        for (int i = 0; i < table.layers.Length; i++)
+        {
+            for (int j = 0; j < table.layers[i].columns.Length; j++)
+            {
+                for (int k = 0; k < table.layers[i].columns[j].rows.Length; k++)
+                {
+                    tiles.Add(table.layers[i].columns[j].rows[k].tile);
+                }
+            }
+        }
+        GameObject[] tile = tiles.ToArray();
+        return tile;
+    }
+    public GameObject[] GetInactiveTiles()
+    {
+        List<GameObject> tiles = new List<GameObject>();
+        for(int i=0;i<table.layers.Length;i++)
+        {
+            for (int j = 0; j < table.layers[i].columns.Length; j++)
+            {
+                for (int k = 0; k < table.layers[i].columns[j].rows.Length; k++)
+                {
+                    if(!table.layers[i].columns[j].rows[k].tile.GetComponent<Button>().enabled)
+                        tiles.Add(table.layers[i].columns[j].rows[k].tile);
+                }
+            }
+        }
+        GameObject[] tile = tiles.ToArray();
+        return tile;
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
             ActivateActivatedTiles();
+        }
+    }
+    public IEnumerator SetX(GameObject tile)
+    {
+        for(float i= 0; i< 24;i++)
+        {
+            yield return new WaitForSeconds(0.05f);
+            if(tile.GetComponent<RectTransform>().sizeDelta.x<=124)
+                tile.GetComponent<RectTransform>().sizeDelta = new Vector2(tile.GetComponent<RectTransform>().sizeDelta.x+1, tile.GetComponent<RectTransform>().sizeDelta.y);
+        }
+    }
+    public IEnumerator SetY(GameObject tile)
+    {
+        for (float i = 0; i < 19; i++)
+        {
+            yield return new WaitForSeconds(0.05f);
+            if (tile.GetComponent<RectTransform>().sizeDelta.y <= 127)
+                tile.GetComponent<RectTransform>().sizeDelta = new Vector2(tile.GetComponent<RectTransform>().sizeDelta.x, tile.GetComponent<RectTransform>().sizeDelta.y+1);
         }
     }
     public void ActivateLayer(int layerNumber)
@@ -187,6 +247,9 @@ public class BoardManager : MonoBehaviour
                         item3.tile.GetComponent<Button>().enabled = false;
                         item3.tileScript.isActivated = false;
                         item3.tileScript.isStacked = true;
+                        //item3.tile.GetComponent<Animator>().SetBool("TileEnabled", true);
+                        //item3.tile.GetComponent<RectTransform>().sizeDelta = new Vector2(123, 127);
+                        
                     }
                 }
             }
@@ -200,7 +263,8 @@ public class BoardManager : MonoBehaviour
                     go.tileScript.isActivated = true;
                     go.tile.GetComponent<Button>().enabled = true;
                     go.tileScript.isStacked = false;
-
+                    GameManager._instance.StartCoroutine(SetX(go.tile.gameObject));
+                    GameManager._instance.StartCoroutine(SetY(go.tile.gameObject));
 
                 }
             }
@@ -297,6 +361,11 @@ public class BoardManager : MonoBehaviour
                 {
                     jj.tileScript.isStacked = false;
                     jj.tileScript.GetComponent<Button>().enabled = true;
+                    
+                    GameManager._instance.StartCoroutine(SetX(jj.tile.gameObject));
+                    GameManager._instance.StartCoroutine(SetY(jj.tile.gameObject));
+                    //jj.tileScript.GetComponent<Animator>().SetBool("TileEnabled", true);
+                    //jj.tile.GetComponent<RectTransform>().sizeDelta = new Vector2(123, 127);
 
                 }
 
@@ -324,7 +393,8 @@ public class BoardManager : MonoBehaviour
 
                                 jj.tileScript.isStacked = true;
                                 jj.tileScript.GetComponent<Button>().enabled = false;
-
+                                //GameManager._instance.StartCoroutine(SetX(jj.tile.gameObject));
+                                //GameManager._instance.StartCoroutine(SetY(jj.tile.gameObject));
 
                             }
 
@@ -386,6 +456,8 @@ public class BoardManager : MonoBehaviour
                     table.layers[layer].columns[i].rows[j].tileScript.image.color = selectColor;
                     table.layers[layer].columns[i].rows[j].tileScript.isActivated = true;
                     table.layers[layer].columns[i].rows[j].tileScript.GetComponent<Button>().enabled = true;
+                    //table.layers[layer].columns[i].rows[j].tileScript.GetComponent<Animator>().SetBool("TileEnabled", true);
+                    //table.layers[layer].columns[i].rows[j].tile.GetComponent<RectTransform>().sizeDelta = new Vector2(123, 127);
                     temp -= 1;
                 }
                 if (temp<=0)

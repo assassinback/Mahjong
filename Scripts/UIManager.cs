@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Linq;
+using System;
+
 [System.Serializable]
 public class UIManager : MonoBehaviour
 {
@@ -41,7 +43,8 @@ public class UIManager : MonoBehaviour
     public GameObject selectedCardImage;
     public Button nextLevelButton;
     public GameObject settingCanvas;
-    [field: SerializeField] public List<StackTileData> data = new List<StackTileData>();
+    public GameObject firstLevelCanvas;
+    public Button firstLevelButton;
     private void Start()
     {
         SetLimitedValues();
@@ -283,5 +286,22 @@ public class UIManager : MonoBehaviour
             scrollViewCardSelected.transform.GetChild(i).gameObject.SetActive(true);
             scrollViewCardSelected.transform.GetChild(i).gameObject.GetComponent<Image>().sprite=selectTiles[i].gameObject.GetComponent<Image>().sprite;
         }
+    }
+    public void FirstTimeLevel()
+    {
+        firstLevelCanvas.SetActive(false);
+        if (PlayerPrefs.HasKey("FirstLevel"))
+        {
+            return;
+        }
+        PlayerPrefs.SetInt("FirstLevel", 1);
+        firstLevelCanvas.SetActive(true);
+        firstLevelButton.onClick.AddListener(FirstLevelScreenClicked);
+    }
+
+    public void FirstLevelScreenClicked()
+    {
+        firstLevelCanvas.SetActive(false);
+        firstLevelButton.gameObject.SetActive(false);
     }
 }
