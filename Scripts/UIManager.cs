@@ -45,6 +45,7 @@ public class UIManager : MonoBehaviour
     public GameObject settingCanvas;
     public GameObject firstLevelCanvas;
     public Button firstLevelButton;
+    public TextMeshProUGUI adLoadedText;
     private void Start()
     {
         SetLimitedValues();
@@ -81,6 +82,10 @@ public class UIManager : MonoBehaviour
             int randomWait = UnityEngine.Random.Range(8, 12);
             yield return new WaitForSeconds(randomWait);
         }
+    }
+    public void SetAdLoadedText(string text)
+    {
+        adLoadedText.text = text;
     }
     public void SetLevelNameText(string text)
     {

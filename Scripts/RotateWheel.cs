@@ -13,31 +13,33 @@ public class RotateWheel : MonoBehaviour {
       uiSpinButton.onClick.AddListener (() => {
 
          uiSpinButton.interactable = false ;
-         //uiSpinButtonText.text = "Spinning" ;
-
-         pickerWheel.OnSpinEnd (wheelPiece => {
+          //uiSpinButtonText.text = "Spinning" ;
+          if (GoogleAdsScript._instance.rewardedAd.IsLoaded())
+          {
+              GoogleAdsScript._instance.rewardedAd.Show();
+              
+          }
+          
+          pickerWheel.OnSpinEnd (wheelPiece => {
             
             addSpecialItems(wheelPiece.Amount, wheelPiece.Label);
             uiSpinButton.interactable = true ;
             //uiSpinButtonText.text = "Spin" ;
          }) ;
-          pickerWheel.Spin();
-         // if (GoogleAdsScript._instance.rewardedAd.IsLoaded())
-         //{
-         //     GoogleAdsScript._instance.rewardedAd.Show();
-         //     adWatched = true;
-         //}
-         //GoogleAdsScript._instance.RequestRewarded();
-         //if(adWatched)
-         //{
-         //     pickerWheel.Spin();
-         //     adWatched = false;
-         // }
-         //else
-         //{
-         //     uiSpinButton.interactable = true;
-         //}
-         
+          
+
+          if (adWatched)
+          {
+              UIManager._instance.SetAdLoadedText("");
+              pickerWheel.Spin();
+              adWatched = false;
+          }
+          else
+          {
+              uiSpinButton.interactable = true;
+              UIManager._instance.SetAdLoadedText("Ad Is Not Loaded Yet");
+          }
+
 
       }) ;
 

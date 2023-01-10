@@ -93,6 +93,7 @@ public class GoogleAdsScript : MonoBehaviour
     public void HandleUserEarnedReward(object sender, Reward args)
     {
         RotateWheel.adWatched = true;
+        RequestRewarded();
     }
 
     public void RequestInterstitial()

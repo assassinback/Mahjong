@@ -274,6 +274,7 @@ MonoBehaviour:
   settingCanvas: {fileID: 0}
   firstLevelCanvas: {fileID: 0}
   firstLevelButton: {fileID: 0}
+  adLoadedText: {fileID: 0}
 --- !u!1 &8643441188368477552
 GameObject:
   m_ObjectHideFlags: 0

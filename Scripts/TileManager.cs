@@ -24,6 +24,14 @@ public class TileManager : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
+            if (cards.Contains(child.GetComponent<RectTransform>()))
+            {
+                cards.Remove(child.GetComponent<RectTransform>());
+            }
+            if (selectTiles.Contains(child.GetComponent<SelectTile>()))
+            {
+                selectTiles.Remove(child.GetComponent<SelectTile>());
+            }
             Destroy(child.gameObject);
         }
     }
@@ -34,8 +42,27 @@ public class TileManager : MonoBehaviour
         cards.Clear();
         selectTiles.Clear();
         UIManager._instance.AddToStack();
-        currentLevelInfo = LevelManager._instance.levelCount[LevelManager._instance.levelCount.Count - 1];
-        BoardManager._instance.table = LevelManager._instance.levelPattern[LevelManager._instance.levelPattern.Count - 1];
+        for(int i=0;i< LevelManager._instance.levelCount.Count;i++)
+        {
+            try
+            {
+                if (!LevelManager._instance.levelCount[i].levelUnlocked)
+                {
+                    currentLevelInfo = LevelManager._instance.levelCount[i - 1];
+                    BoardManager._instance.table = LevelManager._instance.levelPattern[i - 1];
+                    break;
+                }
+            }
+            catch(System.Exception)
+            {
+                currentLevelInfo = LevelManager._instance.levelCount[LevelManager._instance.levelCount.Count - 1];
+                BoardManager._instance.table = LevelManager._instance.levelPattern[LevelManager._instance.levelPattern.Count - 1];
+                break;
+            }
+
+        }
+        //currentLevelInfo = LevelManager._instance.levelCount[LevelManager._instance.levelCount.Count - 1];
+        //BoardManager._instance.table = LevelManager._instance.levelPattern[LevelManager._instance.levelPattern.Count - 1];
         BoardManager._instance.StartGenerating();
         LoadLevel();
         UIManager._instance.ResumeButtonClicked();
@@ -48,6 +75,7 @@ public class TileManager : MonoBehaviour
         cards.Clear();
         selectTiles.Clear();
         UIManager._instance.AddToStack();
+        LevelManager._instance.GetPatterns();
         BoardManager._instance.table = LevelManager._instance.levelPattern[int.Parse(currentLevelInfo.levelName)-1];
         BoardManager._instance.StartGenerating();
         LoadLevel();
@@ -115,6 +143,9 @@ public class TileManager : MonoBehaviour
     {
         if (originalTime <= 0 || selectTiles.Count >= 10)
         {
+            ClearCards();
+            cards.Clear();
+            selectTiles.Clear();
             UIManager._instance.ShowInGameUI();
             UIManager._instance.EnableLevelCompletePanel();
             UIManager._instance.SetCompleteLevelText(levelFailText);
@@ -131,6 +162,9 @@ public class TileManager : MonoBehaviour
         }
         else if (cards.Count <= 0)
         {
+            ClearCards();
+            cards.Clear();
+            selectTiles.Clear();
             UIManager._instance.ShowInGameUI();
             UIManager._instance.EnableLevelCompletePanel();
             UIManager._instance.SetCompleteLevelText(levelWinText);

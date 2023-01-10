@@ -619,7 +619,7 @@ public class GenerateLevelPatterns : MonoBehaviour
         MakeColumns(ref levelPattern[1].columns);
         levelPattern[2] = new Layer(3, 4);
         MakeColumns(ref levelPattern[2].columns);
-        levelPattern[3] = new Layer(4,4);
+        levelPattern[3] = new Layer(4,3);
         MakeColumns(ref levelPattern[3].columns);
         levelPattern[4] = new Layer(4, 3);
         MakeColumns(ref levelPattern[4].columns);

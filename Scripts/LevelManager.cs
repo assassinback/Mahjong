@@ -33,9 +33,9 @@ public class LevelManager : MonoBehaviour
                 LevelInfo levelInfo = new LevelInfo();
                 levelInfo.levelCompleted = false;
                 levelInfo.levelUnlocked = true;
-                if (i==0)
+                if (i>0)
                 {
-                    levelInfo.levelUnlocked = true;
+                    levelInfo.levelUnlocked = false;
                 }
                 levelInfo.levelName = (i + 1).ToString();
                 levelInfo.levelTime = 60;

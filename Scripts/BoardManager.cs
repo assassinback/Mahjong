@@ -220,8 +220,16 @@ public class BoardManager : MonoBehaviour
         for(float i= 0; i< 24;i++)
         {
             yield return new WaitForSeconds(0.05f);
-            if(tile.GetComponent<RectTransform>().sizeDelta.x<=124)
-                tile.GetComponent<RectTransform>().sizeDelta = new Vector2(tile.GetComponent<RectTransform>().sizeDelta.x+1, tile.GetComponent<RectTransform>().sizeDelta.y);
+            try
+            {
+                if (tile.GetComponent<RectTransform>().sizeDelta.x <= 124)
+                    tile.GetComponent<RectTransform>().sizeDelta = new Vector2(tile.GetComponent<RectTransform>().sizeDelta.x + 1, tile.GetComponent<RectTransform>().sizeDelta.y);
+            }
+            catch(System.Exception)
+            {
+
+            }
+            
         }
     }
     public IEnumerator SetY(GameObject tile)
@@ -229,8 +237,16 @@ public class BoardManager : MonoBehaviour
         for (float i = 0; i < 19; i++)
         {
             yield return new WaitForSeconds(0.05f);
-            if (tile.GetComponent<RectTransform>().sizeDelta.y <= 127)
-                tile.GetComponent<RectTransform>().sizeDelta = new Vector2(tile.GetComponent<RectTransform>().sizeDelta.x, tile.GetComponent<RectTransform>().sizeDelta.y+1);
+            try
+            {
+                if (tile.GetComponent<RectTransform>().sizeDelta.y <= 127)
+                    tile.GetComponent<RectTransform>().sizeDelta = new Vector2(tile.GetComponent<RectTransform>().sizeDelta.x, tile.GetComponent<RectTransform>().sizeDelta.y + 1);
+            }
+            catch(System.Exception)
+            {
+
+            }
+            
         }
     }
     public void ActivateLayer(int layerNumber)
@@ -384,9 +400,9 @@ public class BoardManager : MonoBehaviour
                         if (jj.tileScript.isActivated && !jj.tileScript.isStacked)
                         {
 
-
+                            Debug.Log(Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position));
                             //print($"checking......{j.tile.gameObject.name} , {jj.tile.gameObject.name}  {Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position)}");
-                            if (Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position) < 75
+                            if (Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position) < 120
                                 /*|| Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position) < 71*/ )
                             {
                                 //print($"false......{j.tile.gameObject.name} , {jj.tile.gameObject.name}  {Vector2.Distance(j.tileScript.rectTransform.position, jj.tileScript.rectTransform.position)}");
